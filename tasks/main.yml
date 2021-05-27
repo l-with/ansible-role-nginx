@@ -1,0 +1,32 @@
+---
+
+- name: Ensure nginx installed
+  ansible.builtin.package:
+    name: nginx
+
+- name: Ensure nginx is enabled and startet
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Ensure disable /etc/nginx/sites-enabled/default
+  ansible.builtin.file:
+    name: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+
+- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
+  notify: restart nginx
+
+- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}.conf
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
+    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}.conf
+    state: link
+  notify: restart nginx
+
+...
