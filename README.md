@@ -1,5 +1,5 @@
 # Ansible Role Nginx
-Install Nginx with simple site using Let's Encrypt certificate
+Install Nginx with cofiguration using Let's Encrypt certificate
 
 ## Role Variables
 
