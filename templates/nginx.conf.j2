@@ -42,5 +42,5 @@ server {
 
     server_name _;
 
-    {{ nginx_location_stanzas }}
+    {{ nginx_location_stanzas | indent(width=4,indentfirst=true)}}
 }
