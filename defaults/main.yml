@@ -1,10 +1,10 @@
 ---
 
-nginx_location_stanza: |-
+nginx_location_stanza: |
   # First attempt to serve request as file, then
   # as directory, then fall back to displaying a 404.
   try_files $uri $uri/ =404;
-nginx_location_stanzas: |-
+nginx_location_stanzas: |
   location / {
   {{ nginx_location_stanza | indent(width=4,indentfirst=true)}}
   }
