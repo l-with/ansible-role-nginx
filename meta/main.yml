@@ -10,7 +10,5 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions: focal
-  - name: EL
-    versions: 8
 
 ...
