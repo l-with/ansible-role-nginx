@@ -6,7 +6,7 @@ nginx_location_stanza: |-
   try_files $uri $uri/ =404;
 nginx_location_stanzas: |-
   location / {
-  {{ nginx_location_stanza | | indent(width=4,indentfirst=true)}}
+  {{ nginx_location_stanza | indent(width=4,indentfirst=true)}}
   }
 
 ...
