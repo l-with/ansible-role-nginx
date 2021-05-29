@@ -13,3 +13,11 @@ the FQDN of the server for nginx_server_name and Let's Encrypt certificates
         try_files $uri $uri/ =404;
 ```
 the content for the `location /` stanza
+
+#### `nginx_location_stanzas`: 
+```
+        location / {
+            {{ nginx_location_stanza}}
+        }
+```
+all location stanzas

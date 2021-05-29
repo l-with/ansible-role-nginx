@@ -42,7 +42,5 @@ server {
 
     server_name _;
 
-    location / {
-{{ nginx_location_stanza}}
-    }
+    {{ nginx_location_stanzas }}
 }
