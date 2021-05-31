@@ -22,6 +22,11 @@
   loop:
     - 443
 
+- name: Ensure _nginx_ssl_config
+  ansible.builtin.set_fact:
+    _nginx_ssl_config[item]: "{{ nginx_ssl_config }}"
+  loop: {{ nginx_ssl_ports }}
+
 - name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
   ansible.builtin.template:
     src: nginx.conf.j2
@@ -34,5 +39,13 @@
     dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}.conf
     state: link
   notify: restart nginx
+
+# - name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_port.conf
+#   ansible.builtin.template:
+#     src: nginx_port.conf.j2
+#     dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item }}.conf
+#   notify: restart nginx
+#   loop:
+#     - 5050
 
 ...
