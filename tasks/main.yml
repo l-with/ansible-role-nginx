@@ -18,7 +18,7 @@
 
 - name: Ensure _nginx_ssl_443_config
   ansible.builtin.set_fact:
-    _nginx_ssl_443_config: {{ nginx_ssl_config }}
+    _nginx_ssl_443_config: "{{ nginx_ssl_config }}"
   loop:
     - 443
 
