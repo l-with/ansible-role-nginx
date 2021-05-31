@@ -24,7 +24,7 @@
 
 - name: Ensure _nginx_ssl_config
   ansible.builtin.set_fact:
-    _nginx_ssl_config[item]: "{{ nginx_ssl_config }}"
+    _nginx_ssl_config.item: "{{ nginx_ssl_config }}"
   loop: {{ nginx_ssl_ports }}
 
 - name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
