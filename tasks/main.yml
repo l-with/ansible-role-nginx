@@ -16,6 +16,12 @@
     state: absent
   notify: restart nginx
 
+- name: Ensure _nginx_ssl_443_config
+  ansible.builtin.set_fact:
+    _nginx_ssl_443_config: {{ nginx_ssl_config }}
+  loop:
+    - 443
+
 - name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
   ansible.builtin.template:
     src: nginx.conf.j2
