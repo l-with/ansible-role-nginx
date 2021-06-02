@@ -19,7 +19,7 @@
 - name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_80.conf
   ansible.builtin.template:
     src: nginx_80.conf.j2
-    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
+    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_80.conf
   notify: restart nginx
 
 - name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_80.conf
