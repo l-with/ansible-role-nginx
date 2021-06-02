@@ -22,6 +22,9 @@ the content for the `location /` stanza
 ```
 all location stanzas
 
+#### `nginx_443_proxy_port`:
+the proxy port for https 
+
 #### `nginx_ssl_config`: 
 ```
     ###########################################################################
