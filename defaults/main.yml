@@ -9,7 +9,7 @@ nginx_location_stanzas: |
   {{ nginx_location_stanza_content | indent(width=4,indentfirst=true)}}
   }
 nginx_proxy_conf: |
-  proxy_pass http://localhost:{{ item.port }}/;
+  proxy_pass http://localhost:{{ item.proxy_port }}/;
   proxy_set_header Host $host;
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-Proto $scheme;
