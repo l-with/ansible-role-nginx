@@ -56,4 +56,4 @@ the ssl configuration used in the templates
 
 #### `nginx_ssl_confs`: []
 the ports and location stanzas for additional nginx ssl configurations
-item format: `{ port : <portnumber>, location_stanza
+item format: `{ port : <portnumber>, location: <location_stanza>, proxy_port: <proxy_port> }`
