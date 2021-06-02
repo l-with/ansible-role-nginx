@@ -16,34 +16,47 @@
     state: absent
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
+- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_80.conf
   ansible.builtin.template:
-    src: nginx.conf.j2
+    src: nginx_80.conf.j2
     dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
-  loop:
-    - 443
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}.conf
+- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_80.conf
   ansible.builtin.file:
-    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}.conf
-    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}.conf
+    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_80.conf
+    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_80.conf
     state: link
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_port.conf
+- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_443.conf
   ansible.builtin.template:
     src: nginx_port.conf.j2
-    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item }}.conf
-  loop: "{{ nginx_ssl_ports }}"
+    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_443.conf
+  loop:
+    - { port: 443, location: '{{ nginx_location_stanzas }}' }
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item }}.conf
+- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_443.conf
   ansible.builtin.file:
-    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item }}.conf
-    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item }}.conf
+    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_443.conf
+    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_443.conf
     state: link
-  loop: "{{ nginx_ssl_ports }}"
+  notify: restart nginx
+
+- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+  ansible.builtin.template:
+    src: nginx_port.conf.j2
+    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+  loop: "{{ nginx_ssl_confs }}"
+  notify: restart nginx
+
+- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+    state: link
+  loop: "{{ nginx_ssl_confs }}"
   notify: restart nginx
 
 ...

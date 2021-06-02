@@ -1,19 +1,30 @@
 ---
 
-nginx_location_stanza: |
+nginx_location_root_stanza_content: |
   # First attempt to serve request as file, then
   # as directory, then fall back to displaying a 404.
   try_files $uri $uri/ =404;
 nginx_location_stanzas: |
   location / {
-  {{ nginx_location_stanza | indent(width=4,indentfirst=true)}}
+  {{ nginx_location_stanza_content | indent(width=4,indentfirst=true)}}
   }
+nginx_proxy_conf: |
+  proxy_pass http://localhost:{{ item.port }}/;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+nginx_proxy_location: |
+  location / {
+  {{ nginx_proxy_conf | indent(width=4,indentfirst=true)}}
+  }
+
 nginx_ssl_config: |
   ###########################################################################
   # start copy from/etc/nginx/sites-enabled/default managed by certbot
   ###########################################################################
-  listen [::]:{{ item }} ssl ipv6only=on; # managed by Certbot
-  listen {{ item }} ssl; # managed by Certbot
+  listen [::]:{{ item.port }} ssl ipv6only=on; # managed by Certbot
+  listen {{ item.port }} ssl; # managed by Certbot
   ssl_certificate /etc/letsencrypt/live/{{ nginx_server_FQDN }}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/{{ nginx_server_FQDN }}/privkey.pem;
   # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -37,6 +48,6 @@ nginx_ssl_config: |
   # end copy from /etc/letsencrypt/options-ssl-nginx.conf
   ###########################################################################
 
-nginx_ssl_ports: []
+nginx_ssl_extra: []
 
 ...

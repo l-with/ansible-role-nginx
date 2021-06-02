@@ -6,7 +6,7 @@ Install Nginx with cofiguration using Let's Encrypt certificate
 #### `nginx_server_FQDN`:
 the FQDN of the server for nginx_server_name and Let's Encrypt certificates
 
-#### `nginx_location_stanza`: 
+#### `nginx_location_root_stanza_content`: 
 ```
     # First attempt to serve request as file, then
     # as directory, then fall back to displaying a 404.
@@ -27,8 +27,8 @@ all location stanzas
     ###########################################################################
     # start copy from/etc/nginx/sites-enabled/default managed by certbot
     ###########################################################################
-    listen [::]:{{ item }} ssl ipv6only=on; # managed by Certbot
-    listen {{ item }} ssl; # managed by Certbot
+    listen [::]:{{ item.port }} ssl ipv6only=on; # managed by Certbot
+    listen {{ item.port }} ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/{{ nginx_server_FQDN }}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{{ nginx_server_FQDN }}/privkey.pem;
     # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -54,5 +54,6 @@ all location stanzas
 ```
 the ssl configuration used in the templates
 
-#### `nginx_ssl_ports`: []
-the ports for additional nginx ssl configuration
+#### `nginx_ssl_confs`: []
+the ports and location stanzas for additional nginx ssl configurations
+item format: `{ port : <portnumber>, location_stanza
