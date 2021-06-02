@@ -19,9 +19,3 @@ server {
 
 {{ nginx_location_stanzas | indent(width=4,indentfirst=true)}}
 }
-
-{% for port in nginx_ssl_ports %}
-server {
-{{ _nginx_ssl_config[port] | indent(width=4,indentfirst=true) }}
-}
-{% endfor %}
