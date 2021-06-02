@@ -52,4 +52,7 @@ all location stanzas
     # end copy from /etc/letsencrypt/options-ssl-nginx.conf
     ###########################################################################
 ```
-the ssl configuration used in the template
+the ssl configuration used in the templates
+
+#### `nginx_ssl_ports`: []
+the ports for additional nginx ssl configuration

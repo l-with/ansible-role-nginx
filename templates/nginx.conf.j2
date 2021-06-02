@@ -10,7 +10,7 @@ server {
 }
 
 server {
-{{ _nginx_ssl_443_config  | indent(width=4,indentfirst=true) }}
+{{ nginx_ssl_config  | indent(width=4,indentfirst=true) }}
 
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
@@ -24,3 +24,4 @@ server {
 server {
 {{ _nginx_ssl_config[port] | indent(width=4,indentfirst=true) }}
 }
+{% endfor %}
