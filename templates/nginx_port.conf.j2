@@ -8,5 +8,5 @@ server {
 
     server_name {{ nginx_server_name }};
 
-{{ nginx_location_stanza | indent(width=4,indentfirst=true)}}
+{{ nginx_location_stanzas | indent(width=4,indentfirst=true)}}
 }
