@@ -55,6 +55,6 @@ nginx_ssl_config: |
   # end copy from /etc/letsencrypt/options-ssl-nginx.conf
   ###########################################################################
 
-nginx_ssl_extra: []
+nginx_ssl_confs: []
 
 ...
