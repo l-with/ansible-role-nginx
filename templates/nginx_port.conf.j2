@@ -6,7 +6,7 @@ server {
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
 
-    server_name _;
+    server_name {{ nginx_server_name }};
 
 {{ nginx_location_stanzas | indent(width=4,indentfirst=true)}}
 }
