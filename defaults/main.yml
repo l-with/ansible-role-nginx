@@ -5,12 +5,12 @@ nginx_location_root_stanza_content: |
   # as directory, then fall back to displaying a 404.
   try_files $uri $uri/ =404;
 
-  nginx_location_stanzas: |
+nginx_location_stanzas: |
   location / {
   {{ nginx_location_stanza_content | indent(width=4,indentfirst=true)}}
   }
 
-  nginx_proxy_conf: |
+ nginx_proxy_conf: |
   proxy_pass http://localhost:{{ item.proxy_port }}/;
   proxy_set_header Host $host;
   proxy_set_header X-Real-IP $remote_addr;
