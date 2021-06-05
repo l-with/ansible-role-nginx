@@ -49,14 +49,14 @@
     state: link
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+- name: "Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
   ansible.builtin.template:
     src: nginx_port.conf.j2
     dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
   loop: "{{ nginx_ssl_confs }}"
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+- name: "Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
   ansible.builtin.file:
     src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
     dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf
