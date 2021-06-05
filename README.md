@@ -22,6 +22,23 @@ the content for the `location /` stanza
 ```
 all location stanzas
 
+#### `nginx_proxy_conf`:
+```
+  proxy_pass http://localhost:{{ item.proxy_port }}/;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+```
+the content for the `nginx_proxy_location_stanza`
+#### `nginx_proxy_location_stanza`:
+```
+  location / {
+  {{ nginx_proxy_conf | indent(width=4,indentfirst=true)}}
+  }
+```
+ca be used for location stanzas
+
 #### `nginx_443_proxy_port`:
 the proxy port for https 
 
