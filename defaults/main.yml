@@ -22,6 +22,8 @@ nginx_proxy_location_stanza: |
   {{ nginx_proxy_conf | indent(width=4,indentfirst=true)}}
   }
 
+nginx_443_proxy_port: 8080
+
 nginx_ssl_config: |
   ###########################################################################
   # start copy from/etc/nginx/sites-enabled/default managed by certbot
