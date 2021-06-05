@@ -4,17 +4,20 @@ nginx_location_root_stanza_content: |
   # First attempt to serve request as file, then
   # as directory, then fall back to displaying a 404.
   try_files $uri $uri/ =404;
-nginx_location_stanzas: |
+
+  nginx_location_stanzas: |
   location / {
   {{ nginx_location_stanza_content | indent(width=4,indentfirst=true)}}
   }
-nginx_proxy_conf: |
+
+  nginx_proxy_conf: |
   proxy_pass http://localhost:{{ item.proxy_port }}/;
   proxy_set_header Host $host;
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-Proto $scheme;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-nginx_proxy_location: |
+
+nginx_proxy_location_stanza: |
   location / {
   {{ nginx_proxy_conf | indent(width=4,indentfirst=true)}}
   }
