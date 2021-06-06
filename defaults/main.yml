@@ -7,7 +7,7 @@ nginx_location_root_stanza_content: |
 
 nginx_location_stanzas: |
   location / {
-  {{ nginx_location_stanza_content | indent(width=4,indentfirst=true)}}
+  {{ nginx_location_root_stanza_content | indent(width=4,indentfirst=true)}}
   }
 
 nginx_proxy_conf: |
