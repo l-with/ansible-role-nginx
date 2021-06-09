@@ -1,5 +1,9 @@
 ---
 
+nginx_install: yes
+
+nginx_configuration_home: /etc/nginx
+
 nginx_location_root_stanza_content: |
   # First attempt to serve request as file, then
   # as directory, then fall back to displaying a 404.
@@ -30,7 +34,8 @@ nginx_ssl_config: |
   ###########################################################################
   # start copy from/etc/nginx/sites-enabled/default managed by certbot
   ###########################################################################
-  listen [::]:{{ item.port }} ssl ipv6only=on; # managed by Certbot
+  # listen [::]:{{ item.port }} ssl ipv6only=on; # managed by Certbot
+  listen [::]:{{ item.port }} ssl; # managed by Certbot
   listen {{ item.port }} ssl; # managed by Certbot
   ssl_certificate /etc/letsencrypt/live/{{ nginx_server_FQDN }}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/{{ nginx_server_FQDN }}/privkey.pem;
@@ -56,5 +61,59 @@ nginx_ssl_config: |
   ###########################################################################
 
 nginx_ssl_confs: []
+
+nginx_vouch_validate_config: |
+  ###########################################################################
+  # start copy from https://github.com/vouch/vouch-proxy
+  ###########################################################################
+
+  # send all requests to the `/validate` endpoint for authorization
+  auth_request /validate;
+
+  location = /validate {
+    # forward the /validate request to Vouch Proxy
+    proxy_pass http://127.0.0.1:9090/validate;
+
+    # be sure to pass the original host header
+    proxy_set_header Host $http_host;
+
+    # Vouch Proxy only acts on the request headers
+    proxy_pass_request_body off;
+    proxy_set_header Content-Length "";
+
+    # optionally add X-Vouch-User as returned by Vouch Proxy along with the request
+    auth_request_set $auth_resp_x_vouch_user $upstream_http_x_vouch_user;
+
+    # optionally add X-Vouch-IdP-Claims-* custom claims you are tracking
+    #    auth_request_set $auth_resp_x_vouch_idp_claims_groups $upstream_http_x_vouch_idp_claims_groups;
+    #    auth_request_set $auth_resp_x_vouch_idp_claims_given_name $upstream_http_x_vouch_idp_claims_given_name;
+    # optinally add X-Vouch-IdP-AccessToken or X-Vouch-IdP-IdToken
+    #    auth_request_set $auth_resp_x_vouch_idp_accesstoken $upstream_http_x_vouch_idp_accesstoken;
+    #    auth_request_set $auth_resp_x_vouch_idp_idtoken $upstream_http_x_vouch_idp_idtoken;
+
+    # these return values are used by the @error401 call
+    auth_request_set $auth_resp_jwt $upstream_http_x_vouch_jwt;
+    auth_request_set $auth_resp_err $upstream_http_x_vouch_err;
+    auth_request_set $auth_resp_failcount $upstream_http_x_vouch_failcount;
+
+    # Vouch Proxy can run behind the same Nginx reverse proxy
+    # may need to comply to "upstream" server naming
+    # proxy_pass http://{{ nginx_vouch_FQDN }}/validate;
+    # proxy_set_header Host $http_host;
+  }
+
+  # if validate returns `401 not authorized` then forward the request to the error401block
+  error_page 401 = @error401;
+
+  location @error401 {
+    # redirect to Vouch Proxy for login
+    return 302 https://{{ nginx_vouch_FQDN }}/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err;
+    # you usually *want* to redirect to Vouch running behind the same Nginx config proteced by https
+    # but to get started you can just forward the end user to the port that vouch is running on
+    # return 302 http://{{ nginx_vouch_FQDN }}:9090/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err;
+  }
+  ###########################################################################
+  # end copy from https://github.com/vouch/vouch-proxy
+  ###########################################################################
 
 ...

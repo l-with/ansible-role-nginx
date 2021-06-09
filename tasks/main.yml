@@ -3,36 +3,38 @@
 - name: Ensure nginx installed
   ansible.builtin.package:
     name: nginx
+  when: nginx_install
 
 - name: Ensure nginx is enabled and startet
   ansible.builtin.service:
     name: nginx
     state: started
     enabled: yes
+  when: nginx_install
 
-- name: Ensure disable /etc/nginx/sites-enabled/default
+- name: Ensure disable "{{ nginx_configuration_home }}"/sites-enabled/default
   ansible.builtin.file:
-    name: /etc/nginx/sites-enabled/default
+    name: "{{ nginx_configuration_home }}/sites-enabled/default"
     state: absent
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_80.conf
+- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_80.conf"
   ansible.builtin.template:
     src: nginx_80.conf.j2
-    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_80.conf
+    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_80.conf"
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_80.conf
+- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_80.conf"
   ansible.builtin.file:
-    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_80.conf
-    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_80.conf
+    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_80.conf"
+    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_80.conf"
     state: link
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_443.conf
+- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
   ansible.builtin.template:
     src: nginx_port.conf.j2
-    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_443.conf
+    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
   loop:
     - { 
         port: 443, 
@@ -42,24 +44,24 @@
       }
   notify: restart nginx
 
-- name: Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_443.conf
+- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_443.conf"
   ansible.builtin.file:
-    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_443.conf
-    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_443.conf
+    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
+    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_443.conf"
     state: link
   notify: restart nginx
 
-- name: "Ensure /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
+- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
   ansible.builtin.template:
     src: nginx_port.conf.j2
-    dest: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
   loop: "{{ nginx_ssl_confs }}"
   notify: restart nginx
 
-- name: "Ensure /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
+- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
   ansible.builtin.file:
-    src: /etc/nginx/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf
-    dest: /etc/nginx/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf
+    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
+    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
     state: link
   loop: "{{ nginx_ssl_confs }}"
   notify: restart nginx
