@@ -55,7 +55,7 @@
   ansible.builtin.template:
     src: nginx_port.conf.j2
     dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
-  loop: "{{ nginx_ssl_confs }}"
+  loop: "{{ nginx_confs }}"
   notify: restart nginx
 
 - name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
@@ -63,7 +63,7 @@
     src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
     dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
     state: link
-  loop: "{{ nginx_ssl_confs }}"
+  loop: "{{ nginx_confs }}"
   notify: restart nginx
 
 ...
