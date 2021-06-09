@@ -1,6 +1,7 @@
 ---
 
 nginx_install: yes
+nginx_restart: yes
 
 nginx_configuration_home: /etc/nginx
 
@@ -60,7 +61,7 @@ nginx_ssl_config: |
   # end copy from /etc/letsencrypt/options-ssl-nginx.conf
   ###########################################################################
 
-nginx_ssl_confs: []
+nginx_confs: []
 
 nginx_vouch_validate_config: |
   ###########################################################################

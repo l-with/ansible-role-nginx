@@ -18,6 +18,9 @@ The configuration for port 80 redirects to port 443.
 ### `nginx_install`: yes
 if nginx should be installed and enabled
 
+### `nginx_restart`: yes
+if nginx should be restarted
+
 ### `nginx_configuration_home`: `/etc/nginx`
 the nginx configuration home path
 
@@ -92,7 +95,7 @@ the proxy port for https
 ```
 the ssl configuration used in the templates
 
-### `nginx_ssl_confs`: []
+### `nginx_confs`: []
 the ports and location stanzas for additional nginx ssl configurations
 item format: `{ port : <portnumber>, location: <location_stanza>, proxy_port: <proxy_port> }`
 
