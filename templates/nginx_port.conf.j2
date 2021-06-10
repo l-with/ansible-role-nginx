@@ -1,12 +1,16 @@
 # {{ ansible_managed }}
 
 server {
-{{ nginx_ssl_config  | indent(width=4,indentfirst=true) }}
+{% include 'nginx_ssl.part.j2' %}
 
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
 
-    server_name {{ nginx_server_name }};
+    server_name {{ nginx_conf.server_name }};
+{% if nginx_conf.proxy_port %}
+{% include 'nginx_location_proxy.part.j2' %}
+{% else %}
+{% include 'nginx_location_part.j2' %}
+{% endif %}
 
-{{ nginx_location_stanzas | indent(width=4,indentfirst=true)}}
 }

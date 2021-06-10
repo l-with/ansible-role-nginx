@@ -1,0 +1,28 @@
+---
+
+- hosts: localhost
+  pre_tasks:
+    - name: Ensure "{{ playbook_dir }}/etc/sites-available"
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/etc/sites-available"
+        state: directory
+    - name: Ensure "{{ playbook_dir }}/etc/sites-enabled"
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/etc/sites-enabled"
+        state: directory
+  roles:
+    - role: ../../ansible-role-nginx
+      vars:
+        nginx_install: no
+        nginx_restart: no
+        nginx_configuration_home: "{{ playbook_dir }}/etc"
+        nginx_server_FQDN: private.with42.de
+        nginx_confs: 
+          - {
+              port: 5050, 
+              location: /, 
+              proxy_port: 8050,
+              server_name: "{{ nginx_server_FQDN }}" 
+            }
+
+...

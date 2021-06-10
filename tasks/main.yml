@@ -31,39 +31,48 @@
     state: link
   notify: restart nginx
 
-- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
-  ansible.builtin.template:
-    src: nginx_port.conf.j2
-    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
-  loop:
-    - { 
-        port: 443, 
-        location: nginx_location_stanzas, 
-        proxy_port: "{{ nginx_443_proxy_port }}", 
-        server_name: "{{ nginx_server_FQDN }}" 
-      }
-  notify: restart nginx
+- name: Ensure "{{ nginx_server_FQDN }}_443.conf"
+  block:
+    - name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
+      ansible.builtin.template:
+        src: nginx_port.conf.j2
+        dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
+      loop:
+        - {
+            port: 443, 
+            location: /, 
+            proxy_port: "{{ nginx_443_proxy_port }}", 
+            server_name: "{{ nginx_server_FQDN }}" 
+          }
+      loop_control:
+        loop_var: nginx_conf
+      notify: restart nginx
+    - name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_443.conf"
+      ansible.builtin.file:
+        src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
+        dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_443.conf"
+        state: link
+      notify: restart nginx
 
-- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_443.conf"
-  ansible.builtin.file:
-    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_443.conf"
-    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_443.conf"
-    state: link
-  notify: restart nginx
+- name: Ensure <nginx_conf.FQDN>_<nginx_conf.port>.conf
+  block:
+    - name: Ensure "{{ nginx_configuration_home }}/sites-available/<nginx_conf.server_name>_<nginx_conf.port>.conf"
+      ansible.builtin.template:
+        src: nginx_port.conf.j2
+        dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_conf.server_name }}_{{ nginx_conf.port }}.conf"
+      loop: "{{ nginx_confs }}"
+      loop_control:
+        loop_var: nginx_conf
+      notify: restart nginx
 
-- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
-  ansible.builtin.template:
-    src: nginx_port.conf.j2
-    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
-  loop: "{{ nginx_confs }}"
-  notify: restart nginx
-
-- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
-  ansible.builtin.file:
-    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
-    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_{{ item.port }}.conf"
-    state: link
-  loop: "{{ nginx_confs }}"
-  notify: restart nginx
+    - name: Ensure "{{ nginx_configuration_home }}/sites-enabled/<nginx_conf.server_name>_<nginx_conf.port>.conf"
+      ansible.builtin.file:
+        src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_conf.server_name }}_{{ nginx_conf.port }}.conf"
+        dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_conf.server_name }}_{{ nginx_conf.port }}.conf"
+        state: link
+      loop: "{{ nginx_confs }}"
+      loop_control:
+        loop_var: nginx_conf
+      notify: restart nginx
 
 ...

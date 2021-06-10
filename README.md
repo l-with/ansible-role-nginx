@@ -27,6 +27,8 @@ the nginx configuration home path
 ### `nginx_server_FQDN`:
 the FQDN of the server for nginx_server_name and Let's Encrypt certificates
 
+### `nginx_server_name`: `"{{ nginx_server_FQDN }}"`
+
 ### `nginx_location_root_stanza_content`: 
 ```
     # First attempt to serve request as file, then
@@ -35,69 +37,63 @@ the FQDN of the server for nginx_server_name and Let's Encrypt certificates
 ```
 the content for the `location /` stanza
 
-### `nginx_location_stanzas`: 
-```
-    location / {
-        {{ nginx_location_stanza}}
-    }
-```
-all location stanzas
-
 ### `nginx_proxy_conf`:
 ```
-  proxy_pass http://localhost:{{ item.proxy_port }}/;
-  proxy_set_header Host $host;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass http://localhost:{{ nginx_conf.proxy_port }}/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 ```
 the content for the `nginx_proxy_location_stanza`
 ### `nginx_proxy_location_stanza`:
 ```
-  location / {
-  {{ nginx_proxy_conf | indent(width=4,indentfirst=true)}}
-  }
+    location / {
+    {{ nginx_proxy_conf | indent(width=4,indentfirst=true)}}
+    }
 ```
 can be used for location stanzas
 
-### `nginx_443_proxy_port`:
+### `nginx_443_proxy_port`: 8080
 the proxy port for https 
 
 ### `nginx_ssl_config`: 
 ```
-    ###########################################################################
-    # start copy from/etc/nginx/sites-enabled/default managed by certbot
-    ###########################################################################
-    listen [::]:{{ item.port }} ssl ipv6only=on; # managed by Certbot
-    listen {{ item.port }} ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/{{ nginx_server_FQDN }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ nginx_server_FQDN }}/privkey.pem;
-    # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-    ###########################################################################
-    # end copy from/etc/nginx/sites-enabled/default managed by certbot
-    ###########################################################################
+  ###########################################################################
+  # start copy from/etc/nginx/sites-enabled/default managed by certbot
+  ###########################################################################
+  # listen [::]:{{ nginx_conf.port }} ssl ipv6only=on; # managed by Certbot
+  listen [::]:{{ nginx_conf.port }} ssl; # managed by Certbot
+  listen {{ nginx_conf.port }} ssl; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/{{ nginx_conf.server_name }}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ nginx_conf.server_name }}/privkey.pem;
+  # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+  ###########################################################################
+  # end copy from/etc/nginx/sites-enabled/default managed by certbot
+  ###########################################################################
 
-    ###########################################################################
-    # start copy from /etc/letsencrypt/options-ssl-nginx.conf
-    ###########################################################################
-    ssl_session_cache shared:le_nginx_SSL:10m;
-    ssl_session_timeout 1440m;
-    ssl_session_tickets off;
+  ###########################################################################
+  # start copy from /etc/letsencrypt/options-ssl-nginx.conf
+  ###########################################################################
+  ssl_session_cache shared:le_nginx_SSL:10m;
+  ssl_session_timeout 1440m;
+  ssl_session_tickets off;
 
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_prefer_server_ciphers off;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers off;
 
-    ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384";
-    ###########################################################################
-    # end copy from /etc/letsencrypt/options-ssl-nginx.conf
-    ###########################################################################
+  ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384";
+  ###########################################################################
+  # end copy from /etc/letsencrypt/options-ssl-nginx.conf
+  ###########################################################################
 ```
 the ssl configuration used in the templates
 
 ### `nginx_confs`: []
 the ports and location stanzas for additional nginx ssl configurations
-item format: `{ port : <portnumber>, location: <location_stanza>, proxy_port: <proxy_port> }`
+format: `{ port : <portnumber>, location: <path>, proxy_port: <proxy_port>, server_name: <FQDN> }`
+`loop_var` should be `nginx_conf`
 
 ### `nginx_vouch_FQDN`
 the FQDN of vouch-proxy
