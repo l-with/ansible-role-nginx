@@ -8,7 +8,6 @@ server {
 {% include 'nginx_vouch.part.j2' %}
 {% endif %}
 
-
     server_name {{ nginx_conf.server_name }};
 
 {% if nginx_conf.proxy_port | default(false) %}

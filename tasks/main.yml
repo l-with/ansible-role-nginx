@@ -43,7 +43,7 @@
             location: /, 
             proxy_port: "{{ nginx_443_proxy_port }}", 
             server_name: "{{ nginx_server_FQDN }}",
-            vouch: "{{ nginx_vouch_FQDN | ternary(true, false) }}"
+            vouch: "{{ nginx_vouch_FQDN | default(false) | ternary(true, false) }}"
           }
       loop_control:
         loop_var: nginx_conf
