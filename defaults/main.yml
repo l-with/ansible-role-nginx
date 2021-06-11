@@ -32,8 +32,8 @@ nginx_ssl_config: |-
   # listen [::]:{{ nginx_conf.port }} ssl ipv6only=on; # managed by Certbot
   listen [::]:{{ nginx_conf.port }} ssl; # managed by Certbot
   listen {{ nginx_conf.port }} ssl; # managed by Certbot
-  ssl_certificate /etc/letsencrypt/live/{{ nginx_conf.server_name }}/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/{{ nginx_conf.server_name }}/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/{{ nginx_server_FQDN }}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ nginx_server_FQDN }}/privkey.pem;
   # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
   ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
   ###########################################################################
