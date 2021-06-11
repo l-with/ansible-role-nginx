@@ -3,11 +3,15 @@
 server {
 {% include 'nginx_ssl.part.j2' %}
 
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
+
+{% if nginx_conf.vouch | default(false) %}
+{% include 'nginx_vouch.part.j2' %}
+{% endif %}
+
 
     server_name {{ nginx_conf.server_name }};
-{% if nginx_conf.proxy_port %}
+
+{% if nginx_conf.proxy_port | default(false) %}
 {% include 'nginx_location_proxy.part.j2' %}
 {% else %}
 {% include 'nginx_location.part.j2' %}

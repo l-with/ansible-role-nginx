@@ -17,12 +17,20 @@
         nginx_restart: no
         nginx_configuration_home: "{{ playbook_dir }}/etc"
         nginx_server_FQDN: private.with42.de
+        nginx_vouch_FQDN: vouch.with42.de
+        # nginx_443_proxy_port: no
         nginx_confs: 
           - {
               port: 5050, 
               location: /, 
               proxy_port: 8050,
               server_name: "{{ nginx_server_FQDN }}" 
+            }
+          - {
+              port: 443,
+              location: /,
+              proxy_port: 9090,
+              server_name: "{{ nginx_vouch_FQDN }}"
             }
 
 ...
