@@ -10,7 +10,7 @@ server {
 {% if nginx_conf.proxy_port %}
 {% include 'nginx_location_proxy.part.j2' %}
 {% else %}
-{% include 'nginx_location_part.j2' %}
+{% include 'nginx_location.part.j2' %}
 {% endif %}
 
 }
