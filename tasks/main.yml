@@ -18,16 +18,16 @@
     state: absent
   notify: restart nginx
 
-- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_80.conf"
+- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
   ansible.builtin.template:
-    src: nginx_80.conf.j2
-    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_80.conf"
+    src: nginx_http.conf.j2
+    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
   notify: restart nginx
 
-- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_80.conf"
+- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_http.conf"
   ansible.builtin.file:
-    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_80.conf"
-    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_80.conf"
+    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
+    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_http.conf"
     state: link
   notify: restart nginx
 
