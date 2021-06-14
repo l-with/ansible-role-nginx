@@ -18,19 +18,44 @@
         nginx_configuration_home: "{{ playbook_dir }}/etc"
         nginx_server_FQDN: private.with42.de
         nginx_vouch_FQDN: vouch.with42.de
-        # nginx_443_proxy_port: no
-        nginx_confs: 
-          - {
-              port: 5050, 
-              location: /, 
-              proxy_port: 8050,
-              server_name: "{{ nginx_server_FQDN }}" 
-            }
-          - {
-              port: 443,
-              location: /,
-              proxy_port: 9090,
-              server_name: "{{ nginx_vouch_FQDN }}"
-            }
+        nginx_https_conf: |-
+          location / {
+              proxy_pass         http://localhost:8080/;
+              proxy_http_version 1.1;
+              proxy_read_timeout 900;
+
+              proxy_set_header  Host              $http_host;
+              proxy_set_header  X-Real-IP         $remote_addr;
+              proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+              proxy_set_header  X-Forwarded-Proto $scheme;
+          }
+
+          location /v2 {
+              proxy_pass         http://127.0.0.1:18889;
+              proxy_http_version 1.1;
+              proxy_read_timeout 900;
+
+              proxy_set_header   Host              $host;
+              proxy_set_header   X-Real-IP         $remote_addr;
+              proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+              proxy_set_header   X-Forwarded-Proto $scheme;
+              proxy_read_timeout                  900;
+          }
+
+          client_max_body_size 0;
+        nginx_confs:
+          - port: 443
+            server_name: "{{ nginx_vouch_FQDN }}"
+            nginx_conf: |-
+              location / {
+                  proxy_pass         http://localhost:9090/;
+                  proxy_http_version 1.1;
+                  proxy_read_timeout 900;
+
+                  proxy_set_header  Host              $host;
+                  proxy_set_header  X-Real-IP         $remote_addr;
+                  proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+                  proxy_set_header  X-Forwarded-Proto $scheme;
+              }
 
 ...

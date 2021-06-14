@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+
+server {
+{% set _nginx_ssl_port = 443 %}
+{% include 'nginx_ssl.part.j2' %}
+
+
+{% if nginx_vouch_FQDN | default(false) %}
+{% include 'nginx_vouch.part.j2' %}
+{% endif %}
+
+    server_name {{ nginx_server_FQDN }};
+
+    {{ nginx_https_conf | indent(4)}}
+
+}

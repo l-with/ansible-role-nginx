@@ -1,19 +1,12 @@
 # {{ ansible_managed }}
 
 server {
+{% set _nginx_ssl_port = 443 %}
 {% include 'nginx_ssl.part.j2' %}
 
 
-{% if nginx_conf.vouch | default(false) %}
-{% include 'nginx_vouch.part.j2' %}
-{% endif %}
-
     server_name {{ nginx_conf.server_name }};
 
-{% if nginx_conf.proxy_port | default(false) %}
-{% include 'nginx_location_proxy.part.j2' %}
-{% else %}
-{% include 'nginx_location.part.j2' %}
-{% endif %}
+    {{ nginx_conf.nginx_conf | indent(4)}}
 
 }
