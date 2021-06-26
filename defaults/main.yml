@@ -3,6 +3,8 @@
 nginx_install: yes
 nginx_restart: yes
 
+nginx_GNU: no
+
 nginx_configuration_home: /etc/nginx
 
 nginx_server_name: "{{ nginx_server_FQDN }}"
