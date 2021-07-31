@@ -3,7 +3,7 @@
 server {
     listen [::]:80;
     listen      80;
-    server_name {{ nginx_server_FQDN }};
+    server_name {{ _nginx_server_FQDN }};
 {% if nginx_GNU %}
     add_header X-Clacks-Overhead "GNU Terry Pratchett";
 {% fi %}

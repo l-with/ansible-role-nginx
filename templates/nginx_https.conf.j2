@@ -13,7 +13,7 @@ server {
 {% include 'nginx_vouch.part.j2' %}
 {% endif %}
 
-    server_name {{ nginx_server_FQDN }};
+    server_name {{ _nginx_server_FQDN }};
 
     {{ nginx_https_conf | indent(4)}}
 
