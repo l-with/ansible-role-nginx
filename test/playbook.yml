@@ -46,6 +46,7 @@
         nginx_confs:
           - port: 443
             server_name: "{{ nginx_vouch_FQDN }}"
+            FQDN: "{{ nginx_vouch_FQDN }}"
             nginx_conf: |-
               location / {
                   proxy_pass         http://localhost:9090/;

@@ -28,7 +28,7 @@ the FQDN of the server for nginx_server_name and Let's Encrypt certificates
 ### `nginx_confs`: []
 
 the ports and location stanzas for additional nginx ssl configurations
-format: `{ port : <portnumber>, location: <path>, proxy_port: <proxy_port>, server_name: <FQDN>[, proxy_host: <host>] }`
+format: `{ port : <portnumber>, location: <path>, proxy_port: <proxy_port>, FQDN: <FQDN>, server_name: <FQDN>[, proxy_host: <host>] }`
 `loop_var` should be `nginx_conf`
 
 ### `nginx_vouch_FQDN`

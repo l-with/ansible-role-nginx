@@ -1,11 +1,11 @@
     ###########################################################################
     # start copy from/etc/nginx/sites-enabled/default managed by certbot
     ###########################################################################
-    # listen [::]:{{ _nginx_ssl_port }} ssl ipv6only=on; # managed by Certbot
-    listen [::]:{{ _nginx_ssl_port }} ssl; # managed by Certbot
-    listen {{ _nginx_ssl_port }} ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/{{ _nginx_server_FQDN }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ _nginx_server_FQDN }}/privkey.pem;
+    # listen [::]:{{ _nginx_port }} ssl ipv6only=on; # managed by Certbot
+    listen [::]:{{ _nginx_port }} ssl; # managed by Certbot
+    listen {{ _nginx_port }} ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/{{ nginx_conf.FQDN }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ nginx_conf.FQDN }}/privkey.pem;
     # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
     ###########################################################################
