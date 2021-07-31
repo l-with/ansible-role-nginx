@@ -6,7 +6,7 @@ server {
     server_name {{ _nginx_server_FQDN }};
 {% if nginx_GNU %}
     add_header X-Clacks-Overhead "GNU Terry Pratchett";
-{% fi %}
+{% endif %}
 
     # Redirect all non-https requests
     rewrite ^ https://$host$request_uri? permanent;

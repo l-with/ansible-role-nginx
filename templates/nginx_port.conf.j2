@@ -3,7 +3,7 @@
 server {
 {% if nginx_GNU %}
     add_header X-Clacks-Overhead "GNU Terry Pratchett";
-{% fi %}
+{% endif %}
 
 {% set _nginx_ssl_port = 443 %}
 {% include 'nginx_ssl.part.j2' %}
