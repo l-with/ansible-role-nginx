@@ -1,6 +1,7 @@
 ---
 
 nginx_install: yes
+nginx_config:  yes
 nginx_restart: yes
 
 nginx_GNU: no
