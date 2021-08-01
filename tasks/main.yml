@@ -16,7 +16,7 @@
   ansible.builtin.file:
     name: "{{ nginx_configuration_home }}/sites-enabled/default"
     state: absent
-  when: nginx_default_config
+  when: nginx_config
   notify: restart nginx
 
 - name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
@@ -27,7 +27,7 @@
     nginx_conf:
       server_name: "{{ nginx_server_FQDN }}"
       FQDN:        "{{ nginx_server_FQDN }}"
-  when: nginx_default_config
+  when: nginx_config
   notify: restart nginx
 
 - name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_http.conf"
@@ -35,7 +35,7 @@
     src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
     dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_http.conf"
     state: link
-  when: nginx_default_config
+  when: nginx_config
   notify: restart nginx
 
 - name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_https.conf"
@@ -46,7 +46,7 @@
     nginx_conf:
       server_name: "{{ nginx_server_FQDN }}"
       FQDN:        "{{ nginx_server_FQDN }}"
-  when: nginx_default_config
+  when: nginx_config
   notify: restart nginx
 
 - name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_https.conf"
@@ -54,7 +54,7 @@
     src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_https.conf"
     dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_https.conf"
     state: link
-  when: nginx_default_config
+  when: nginx_config
   notify: restart nginx
 
 - name: Ensure <nginx_conf.FQDN>_<nginx_conf.port>.conf
