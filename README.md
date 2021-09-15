@@ -16,6 +16,7 @@ if nginx should be installed and enabled
 ### `nginx_config`: `yes`
 
 if the standard nginx configration should be done
+
 ### `nginx_restart`: `yes`
 
 if nginx should be restarted
