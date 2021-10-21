@@ -12,6 +12,13 @@
   when: nginx_config
   notify: restart nginx
 
+- name: Ensure ssl_ecdh_curve configuration (secp384r1)
+  ansible.builtin.template:
+    src: ssl_ehcd_curve.conf.j2
+    dest: "{{ nginx_configuration_home }}/conf.d/ssl_ehcd_curve.conf"
+  when: nginx_config
+  notify: restart nginx
+
 - name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
   ansible.builtin.template:
     src: nginx_http.conf.j2
