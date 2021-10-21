@@ -4,7 +4,10 @@ Install Nginx with configuration using Let's Encrypt certificate
 ## Hard Coded Defaults
 
 ```conf
+    ssl_ecdh_curve secp384r1;
     server_tokens off;
+    ssl_prefer_server_ciphers on;
+    add_header Strict-Transport-Security "max-age=31536000; preload" always;
 ```
 
 ## Usage
