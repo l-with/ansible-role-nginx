@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 
 server {
+    server_tokens off;
 {% if nginx_GNU %}
     add_header X-Clacks-Overhead "GNU Terry Pratchett";
 {% endif %}
