@@ -1,6 +1,12 @@
 # Ansible Role Nginx
 Install Nginx with configuration using Let's Encrypt certificate
 
+## Hard Coded Defaults
+
+```conf
+    server_tokens off;
+```
+
 ## Usage
 Without any parameter nginx is configured similar to a standard installation 
 with Let's Encrypt installed.
