@@ -5,13 +5,6 @@
     name: nginx
   when: nginx_install
 
-- name: Ensure nginx is enabled and startet
-  ansible.builtin.service:
-    name: nginx
-    state: started
-    enabled: yes
-  when: nginx_install
-
 - name: Ensure disable "{{ nginx_configuration_home }}"/sites-enabled/default
   ansible.builtin.file:
     name: "{{ nginx_configuration_home }}/sites-enabled/default"
@@ -77,5 +70,12 @@
       loop_control:
         loop_var: nginx_conf
       notify: restart nginx
+
+- name: Ensure nginx is enabled and started
+  ansible.builtin.service:
+    name: nginx
+    enabled: yes
+    state: started
+  when: nginx_install
 
 ...
