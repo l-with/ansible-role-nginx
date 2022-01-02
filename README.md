@@ -52,6 +52,6 @@ the ports and location stanzas for additional nginx ssl configurations
 format: `{ port : <portnumber>, location: <path>, proxy_port: <proxy_port>, FQDN: <FQDN>, server_name: <FQDN>[, proxy_host: <host>] }`
 `loop_var` should be `nginx_conf`
 
-### `nginx_GNU`: `no`
+### `nginx_GNU`: `yes`
 
 if GNU Terry Pratchett header should be inserted (s. http://www.gnuterrypratchett.com)
