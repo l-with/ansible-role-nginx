@@ -1,5 +1,6 @@
 fileignoreconfig:
-- filename: test/playbook.yml
-  checksum: a0e7ae90fb9deb1ee0968b4fd3d03d8c8f294562b10bbc6b3e0b6d18855fcd78
-- filename: templates/nginx_vouch.part.j2
-  checksum: 05d2d2b243cc05cf07c063d39f9dbcf67258b18fe277882240ce4bb03a205c5f
+
+- filename: README.md
+  allowed_patterns:
+  - >
+    proxy_pass +http://localhost:9201/;
