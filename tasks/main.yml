@@ -70,6 +70,7 @@
       ansible.builtin.template:
         src: nginx_port.conf.j2
         dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_conf.server_name }}_{{ nginx_conf.port }}.conf"
+        mode: o-rw,g-w
       loop: "{{ nginx_confs }}"
       loop_control:
         loop_var: nginx_conf
