@@ -1,5 +1,9 @@
 # {{ ansible_managed }}
 
+{% if nginx_https_map %}
+    {{ nginx_https_map | indent(0)}}
+{% endif %}
+
 server {
     server_tokens off;
 {% if nginx_GNU %}
