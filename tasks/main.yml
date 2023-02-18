@@ -1,89 +1,11 @@
 ---
 
-- name: Ensure nginx installed
-  ansible.builtin.package:
-    name: nginx
+- name: Ensure install nginx
+  ansible.builtin.include_tasks: "nginx_install.yml"
   when: nginx_install
 
-- name: Ensure nginx is enabled and started
-  ansible.builtin.service:
-    name: nginx
-    enabled: yes
-    state: started
-  when: nginx_install
-
-- name: Ensure disable "{{ nginx_configuration_home }}"/sites-enabled/default
-  ansible.builtin.file:
-    name: "{{ nginx_configuration_home }}/sites-enabled/default"
-    state: absent
+- name: Ensure nginx config
+  ansible.builtin.include_tasks: "nginx_configure.yml"
   when: nginx_config
-  notify: restart nginx
-
-- name: Ensure ssl_ecdh_curve configuration (secp384r1)
-  ansible.builtin.template:
-    src: ssl_ehcd_curve.conf.j2
-    dest: "{{ nginx_configuration_home }}/conf.d/ssl_ehcd_curve.conf"
-  when: nginx_config
-  notify: restart nginx
-
-- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
-  ansible.builtin.template:
-    src: nginx_http.conf.j2
-    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
-  vars:
-    nginx_conf:
-      server_name: "{{ nginx_server_FQDN }}"
-      FQDN:        "{{ nginx_server_FQDN }}"
-  when: nginx_config
-  notify: restart nginx
-
-- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_http.conf"
-  ansible.builtin.file:
-    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_http.conf"
-    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_http.conf"
-    state: link
-  when: nginx_config
-  notify: restart nginx
-
-- name: Ensure "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_https.conf"
-  ansible.builtin.template:
-    src: nginx_https.conf.j2
-    dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_https.conf"
-  vars:
-    nginx_conf:
-      server_name: "{{ nginx_server_FQDN }}"
-      FQDN:        "{{ nginx_server_FQDN }}"
-  when: nginx_config
-  notify: restart nginx
-
-- name: Ensure "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_https.conf"
-  ansible.builtin.file:
-    src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_server_FQDN }}_https.conf"
-    dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_server_FQDN }}_https.conf"
-    state: link
-  when: nginx_config
-  notify: restart nginx
-
-- name: Ensure <nginx_conf.FQDN>_<nginx_conf.port>.conf
-  block:
-    - name: Ensure "{{ nginx_configuration_home }}/sites-available/<nginx_conf.server_name>_<nginx_conf.port>.conf"
-      ansible.builtin.template:
-        src: nginx_port.conf.j2
-        dest: "{{ nginx_configuration_home }}/sites-available/{{ nginx_conf.server_name }}_{{ nginx_conf.port }}.conf"
-        mode: o-rw,g-w
-      loop: "{{ nginx_confs }}"
-      loop_control:
-        loop_var: nginx_conf
-      notify: restart nginx
-
-    - name: Ensure "{{ nginx_configuration_home }}/sites-enabled/<nginx_conf.server_name>_<nginx_conf.port>.conf"
-      ansible.builtin.file:
-        src: "{{ nginx_configuration_home }}/sites-available/{{ nginx_conf.server_name }}_{{ nginx_conf.port }}.conf"
-        dest: "{{ nginx_configuration_home }}/sites-enabled/{{ nginx_conf.server_name }}_{{ nginx_conf.port }}.conf"
-        state: link
-      loop: "{{ nginx_confs }}"
-      loop_control:
-        loop_var: nginx_conf
-      notify: restart nginx
 
 ...
