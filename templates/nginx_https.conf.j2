@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-{% if nginx_https_map %}
+{% if nginx_https_map is defined %}
     {{ nginx_https_map | indent(0)}}
 {% endif %}
 
